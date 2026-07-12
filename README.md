@@ -2,10 +2,10 @@
 
 _Dedicated to Theo._
 
-A 6-day calisthenics + posture program (Monday–Saturday, Sunday rest), played
-back like a music app: pick a day in the sidebar, click an exercise, and its
-reference video loads in the Now Playing panel with Prev/Next to move through
-the rest of that day's exercises.
+A 6-day calisthenics and posture program (Mon–Sat, Sun rest) with a
+music-player-style interface: day playlists, exercises as tracks, and a Now
+Playing panel that loads each exercise's reference video with Prev/Next
+navigation.
 
 Live site: https://frankstop.github.io/ShreddedFlatAbs/
 
