@@ -10,13 +10,21 @@
     <meta name="description" content="A 6-day calisthenics and posture program (Mon–Sat, Sun rest) with a music-player-style interface: day playlists, exercises as tracks, and a Now Playing panel that loads each exercise's reference video with Prev/Next navigation." />
     <meta name="dedication" content="Dedicated to Theo" />
     <title>ShreddedFlatAbs</title>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RSVR6Y389R"></script>
+    <!-- Google tag (gtag.js) — skipped on localhost so dev sessions don't
+         pollute the real property. src/analytics.js no-ops when gtag is
+         absent. -->
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-RSVR6Y389R');
+      if (!["localhost", "127.0.0.1"].includes(location.hostname)) {
+        var gtagScript = document.createElement("script");
+        gtagScript.async = true;
+        gtagScript.src = "https://www.googletagmanager.com/gtag/js?id=G-RSVR6Y389R";
+        document.head.appendChild(gtagScript);
+
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () { dataLayer.push(arguments); };
+        gtag('js', new Date());
+        gtag('config', 'G-RSVR6Y389R');
+      }
     </script>
   </head>
   <body>

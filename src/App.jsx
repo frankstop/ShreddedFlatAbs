@@ -7,22 +7,44 @@ import RestDay from "./components/RestDay";
 import { schedule, dayOrder } from "./data/schedule";
 import { exercises } from "./data/exercises";
 import { flattenDay, groupBySection } from "./data/flatten";
+import { track } from "./analytics";
 import "./App.css";
 
 function App() {
   const [selectedDay, setSelectedDay] = useState("monday");
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  // Reset to track 0 during render (not in an effect) when the day
+  // changes, so no commit ever pairs the new day with the old index —
+  // that transient used to flash the wrong video and fire a spurious
+  // video_view for a track the user never picked.
+  const [prevDay, setPrevDay] = useState(selectedDay);
+  if (prevDay !== selectedDay) {
+    setPrevDay(selectedDay);
+    setCurrentIndex(0);
+  }
+
   const day = schedule[selectedDay];
   const flatTracks = useMemo(() => flattenDay(day), [day]);
   const groups = useMemo(() => groupBySection(flatTracks), [flatTracks]);
 
-  useEffect(() => {
-    setCurrentIndex(0);
-  }, [selectedDay]);
-
   const currentTrack = flatTracks[currentIndex] ?? null;
   const currentExercise = currentTrack ? exercises[currentTrack.ref] : null;
+
+  // One video_view per video load: every selection, Prev, or Next that
+  // lands on a track with a video (the player autoplays, so load ≈ play).
+  useEffect(() => {
+    if (!currentTrack || !currentExercise) return;
+    if (!currentExercise.videoId && !currentExercise.localFile) return; // "Video coming soon"
+    track("video_view", {
+      exercise_name: currentExercise.name,
+      exercise_slug: currentTrack.ref,
+      day_name: day.day,
+      section_name: currentTrack.sectionName,
+      video_source: currentExercise.localFile ? "local" : "youtube",
+      video_id: currentExercise.localFile ?? currentExercise.videoId,
+    });
+  }, [currentTrack, currentExercise, day]);
 
   return (
     <div className="app">

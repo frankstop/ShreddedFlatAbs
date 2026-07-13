@@ -52,6 +52,17 @@ guarantee a video is ad-free — whether a pre-roll ad shows up is controlled
 by that video's uploader/monetization, not by the embed. The only way to get
 a genuinely zero-ads track is to swap it to a self-hosted `localFile`.
 
+## Analytics
+
+Every time a track with a video becomes the current track (selection, Prev,
+Next, or switching days), the app fires a GA4 `video_view` event with
+human-readable parameters: `exercise_name` ("Push-ups"), `exercise_slug`,
+`day_name` ("Monday"), `section_name` ("Flat Core"), `video_source`
+(`youtube`/`local`), and `video_id`. See `src/analytics.js` (allowlist +
+safe no-op) and the `useEffect` in `src/App.jsx`. The gtag snippet in
+`index.html` is skipped on localhost, so dev sessions never reach the real
+property.
+
 ## Substituted exercises
 
 A few moves in the original plan have thin video coverage under their exact
